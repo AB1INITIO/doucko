@@ -5,8 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{SECTION}} · ab initio</title>
   <link rel="stylesheet" href="../style.css">
+  <script>
+    (function() {
+      var s = localStorage.getItem('theme');
+      var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', s || (d ? 'dark' : 'light'));
+    })();
+  </script>
 </head>
 <body>
+  <button class="theme-toggle" aria-label="Toggle dark mode"></button>
   <a class="back" href="../">../</a>
 
   <main class="index">
@@ -19,5 +27,14 @@
   <footer>
     <a href="../">~/</a>
   </footer>
+
+  <script>
+    document.querySelector('.theme-toggle').addEventListener('click', function() {
+      var html = document.documentElement;
+      var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
 </body>
 </html>

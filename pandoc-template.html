@@ -7,8 +7,16 @@
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.css">
   <style>$highlighting-css$</style>
+  <script>
+    (function() {
+      var s = localStorage.getItem('theme');
+      var d = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', s || (d ? 'dark' : 'light'));
+    })();
+  </script>
 </head>
 <body>
+  <button class="theme-toggle" aria-label="Toggle dark mode"></button>
   <a class="back" href="./">../</a>
 
   <article>
@@ -19,6 +27,14 @@
     <a href="../">~/</a>
   </footer>
 
+  <script>
+    document.querySelector('.theme-toggle').addEventListener('click', function() {
+      var html = document.documentElement;
+      var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+    });
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16/dist/katex.min.js"></script>
   <script>
     document.querySelectorAll("article h1, article h2, article h3").forEach(function(el) {

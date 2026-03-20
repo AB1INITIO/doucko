@@ -11,6 +11,25 @@
   --fg-muted: #888;
   --bg: #fff;
   --border: #e8e8e8;
+  --code-bg: #f4f4f4;
+}
+
+:root[data-theme="dark"] {
+  --fg: #dcdcdc;
+  --fg-muted: #666;
+  --bg: #111;
+  --border: #2a2a2a;
+  --code-bg: #1c1c1c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --fg: #dcdcdc;
+    --fg-muted: #666;
+    --bg: #111;
+    --border: #2a2a2a;
+    --code-bg: #1c1c1c;
+  }
 }
 
 html {
@@ -183,13 +202,13 @@ article a           { color: var(--fg); }
 article code {
   font-family: var(--mono);
   font-size: 0.85em;
-  background: #f4f4f4;
+  background: var(--code-bg);
   padding: 0.1em 0.35em;
   border-radius: 2px;
 }
 
 article pre {
-  background: #f4f4f4;
+  background: var(--code-bg);
   padding: 1.1rem 1.25rem;
   overflow-x: auto;
   margin: 1.2rem 0;
@@ -229,7 +248,7 @@ article th, article td {
 }
 
 article th {
-  background: #f4f4f4;
+  background: var(--code-bg);
   font-weight: normal;
   font-family: var(--mono);
   font-size: 0.8rem;
@@ -259,4 +278,67 @@ footer a:hover {
 footer .sep {
   margin: 0 0.5rem;
   opacity: 0.4;
+}
+
+/* ── Theme toggle (top-right, all pages) ─────────────── */
+
+.theme-toggle {
+  position: fixed;
+  top: 1.1rem;
+  right: 1.5rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--fg);
+  padding: 0.2rem 0.5rem;
+  line-height: 1.4;
+  transition: border-color 0.12s, color 0.12s;
+}
+
+.theme-toggle:hover {
+  border-color: var(--fg);
+}
+
+.theme-toggle::before {
+  content: '☾';
+}
+
+:root[data-theme="dark"] .theme-toggle::before {
+  content: '☀';
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle::before {
+    content: '☀';
+  }
+}
+
+/* ── Dark mode: syntax highlight overrides ───────────── */
+/* Haddock's palette targets light backgrounds; brighten
+   the tokens that become unreadable on dark.            */
+
+:root[data-theme="dark"] code span.kw,
+:root[data-theme="dark"] code span.ot { color: #7ec88a; }   /* keyword / other   */
+:root[data-theme="dark"] code span.fu { color: #79b8e8; }   /* function          */
+:root[data-theme="dark"] code span.va { color: #79b8e8; }   /* variable          */
+:root[data-theme="dark"] code span.dt { color: #e08080; }   /* data type         */
+:root[data-theme="dark"] code span.cn { color: #e08080; }   /* constant          */
+:root[data-theme="dark"] code span.do { color: #e08080; }   /* doc comment       */
+:root[data-theme="dark"] code span.im { color: #7ec88a; }   /* import            */
+:root[data-theme="dark"] code span.bu { color: #7ec88a; }   /* built-in          */
+:root[data-theme="dark"] code span.op { color: #aaa;    }   /* operator          */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) code span.kw,
+  :root:not([data-theme="light"]) code span.ot { color: #7ec88a; }
+  :root:not([data-theme="light"]) code span.fu { color: #79b8e8; }
+  :root:not([data-theme="light"]) code span.va { color: #79b8e8; }
+  :root:not([data-theme="light"]) code span.dt { color: #e08080; }
+  :root:not([data-theme="light"]) code span.cn { color: #e08080; }
+  :root:not([data-theme="light"]) code span.do { color: #e08080; }
+  :root:not([data-theme="light"]) code span.im { color: #7ec88a; }
+  :root:not([data-theme="light"]) code span.bu { color: #7ec88a; }
+  :root:not([data-theme="light"]) code span.op { color: #aaa;    }
 }
