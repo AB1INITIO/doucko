@@ -199,6 +199,12 @@ article li          { margin-bottom: 0.2rem; }
 
 article a           { color: var(--fg); }
 
+article img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 article code {
   font-family: var(--mono);
   font-size: 0.85em;
@@ -253,6 +259,61 @@ article th {
   font-family: var(--mono);
   font-size: 0.8rem;
   letter-spacing: 0.04em;
+}
+
+/* ── URL links (\url{}) ──────────────────────────────── */
+
+a.uri {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  word-break: break-all;
+}
+
+/* ── Footnotes ───────────────────────────────────────── */
+
+section.footnotes {
+  margin-top: 3rem;
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+}
+
+section.footnotes > hr {
+  display: none;          /* we use border-top on the section instead */
+  border-top: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+section.footnotes ol {
+  padding-left: 1.4rem;
+}
+
+section.footnotes li {
+  margin-bottom: 0.35rem;
+  line-height: 1.6;
+}
+
+section.footnotes p {
+  margin: 0;
+}
+
+a.footnote-ref {
+  font-family: var(--mono);
+  font-size: 0.78em;
+  text-decoration: none;
+  color: var(--fg-muted);
+}
+
+a.footnote-ref:hover,
+a.footnote-back:hover {
+  color: var(--fg);
+}
+
+a.footnote-back {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  text-decoration: none;
+  margin-left: 0.3rem;
+  color: var(--fg-muted);
 }
 
 /* ── Footer ──────────────────────────────────────────── */

@@ -41,15 +41,25 @@ for section_dir in */; do
   for mdfile in "${md_files[@]}"; do
     base=$(basename "$mdfile" .md)
     echo "    pandoc  $mdfile → $out_dir/$base.html"
-    pandoc "$mdfile" \
-      --template=pandoc-template.html \
-      --standalone \
-      --from=markdown+tex_math_dollars \
-      --to=html5 \
-      --katex \
-      --highlight-style=haddock \
-      --output="$out_dir/$base.html"
+    python3 scripts/preprocess.py < "$mdfile" \
+      | pandoc \
+        --template=pandoc-template.html \
+        --standalone \
+        --from=markdown+tex_math_dollars \
+        --to=html5 \
+        --katex \
+        --highlight-style=haddock \
+        --resource-path="$(dirname "$mdfile")" \
+        --output="$out_dir/$base.html"
   done
+
+  # Copy static assets (images, etc.) — anything that isn't a .md file
+  shopt -s nullglob
+  for item in "$section_dir"*; do
+    [[ "$item" == *.md ]] && continue
+    cp -r "$item" "$out_dir/"
+  done
+  shopt -u nullglob
 
   # Collect and sort generated html names (excluding index)
   names=()
