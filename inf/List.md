@@ -52,38 +52,46 @@ def najdi_maximum(cisla):
 
 # Test cisla = [1, 10, 2, 6, 7] vysledok = najdi_maximum(cisla)
 print("Maximum:", vysledok)  # Output: 10 ```
+```
 
 Riešenie nesmie používať funkciu `max` zo štandardnej knižnice `Python`-u.
 
-## Prekladanie
+## Zipsovanie
 
-Napíš funkciu `preloz_zoznamy(zoznam1, zoznam2)`, ktorá ako vstup očakáva
+Napíš funkciu `zazipsuj(zoznam1, zoznam2)`, ktorá ako vstup očakáva
 `zoznam1` a `zoznam2` (t.j. zoznamy s hodnotami `int`) a vytvorý nový zoznam
 tak, že skombinuje prvky v následujúcej forme:
 
-```txt[a, b, ...], [c, d, ...] -> [a, c, b, d, ...] ```
+```
+txt[a, b, ...], [c, d, ...] -> [a, c, b, d, ...]
+```
 
 Tvoj algoritmus musí správne fungovať pre následovné typy vstupov:
 
-a) `zoznam1` a `zoznam2` majú zhodný počet prvkov; b) `zoznam1` a `zoznam2`
-majú rozlišný počet prvkov.
+1. `zoznam1` a `zoznam2` majú zhodný počet prvkov,
+1. `zoznam1` a `zoznam2` majú rozlišný počet prvkov.
 
-```python def preloz_zoznamy(zoznam1, zoznam2): # TODO pass
+```python
+def zazipsuj(zoznam1, zoznam2):
+    # TODO
+    pass
 
-# Test 1 - zhodný počet prvkov zoznam1 = [1, 2, 3] zoznam2 = [4, 5, 6] vysledok
-= preloz_zoznamy(zoznam1, zoznam2) print("Prelozeny zoznam:", vysledok)  #
-Output: [1, 4, 2, 5, 3, 6]
+# Test 1 - zhodný počet prvkov
+zoznam1 = [1, 2, 3]
+zoznam2 = [4, 5, 6]
+vysledok = zazipsuj(zoznam1, zoznam2)
+print("Zazipsovany zoznam:", vysledok)  # Output: [1, 4, 2, 5, 3, 6]
 
 # Test 2 - rozlišný počet prvkov zoznam1 = [1, 2, 3]
 zoznam2 = [4, 5, 6, 7, 10]
-vysledok = preloz_zoznamy(zoznam1, zoznam2)
-print("Prelozeny zoznam:", vysledok)  # Output: [1, 4, 2, 5, 3, 6, 7, 10]
+vysledok = zazipsuj(zoznam1, zoznam2)
+print("Zazipsovany zoznam:", vysledok)  # Output: [1, 4, 2, 5, 3, 6, 7, 10]
 
 # Test 3 - rozlišný počet prvkov
 zoznam1 = [1, 2]
 zoznam2 = []
-vysledok = preloz_zoznamy(zoznam1, zoznam2)
-print("Prelozeny zoznam:", vysledok)  # Output: [1, 2]
+vysledok = zazipsuj(zoznam1, zoznam2)
+print("Zazipsovany zoznam:", vysledok)  # Output: [1, 2]
 ```
 
 Riešenie a), b) môže byť napísané do 1 alebo 2 programov. Riešenie nesmie však
