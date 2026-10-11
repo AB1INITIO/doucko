@@ -103,8 +103,24 @@ hodnotením písomiek. (a) Pomôž jej s programom, ktorý na základe stupnice 
 
 **4)** Vytvor program, ktorý zistí či existuje trojuholník $\Delta$ s dĺžkami strán $a,b,c$. Pre každý takýto trojuholník $\Delta$ platí, že:
 
-$$a + b > c,\; a + c > b,\; b + c > a.$$
+$$\underbrace{a + b > c}_{\text{Podmienka } \#1},\; \underbrace{a + c > b}_{\text{Podmienka } \#2},\; \underbrace{b + c > a}_{\text{Podmienka } \#3}.$$
 
+Ako správne vidíš, musia platiť až 3 podmienky **zároveň**. Teda
+
+$$
+    \text{Podmienka } \#1 \textit{ a zároveň }
+    \text{podmienka } \#2 \textit{ a zároveň }
+    \text{podmienka } \#3.
+$$
+
+No ako docieliť toto v programovaní? Poznáme tzv. *logické spojky* z
+matematickej logiky (ktoré celkom prirodzene vyplývajú aj z jazyka, ktorý
+hovoríme, napr. Slovenčina)! Ak chceme vyjadriť, že 2 podmienky platia
+**zároveň**, použijeme spojku `and` (teda po slovensky 'a' alebo 'a zároveň').
+Noapak, existuje aj spojka `or` (teda 'alebo').
+
+**Otázka**: ako by sa zmenil môj program, keby použijem `or` namiesto `and`
+medzi podmienkami?
 
 **5)** Vytvor program, ktorý simuluje jedno kolo hry *kameň-papier-nožnice* (skrátene `K`,`P`,`N`). Priebeh hry môže vyzerať napr. takto:
 
