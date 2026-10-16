@@ -151,18 +151,20 @@ body\footnote{Pravdaže, za remízu nedostáva nikto bod.}. Je očividné, že n
 >>> vyherca = hrac2
 ```
 
-**7)** Vytvor program, ktorý zistí, či dáne číslo je prvočíslo\footnote{Číslo $p$ je prvočíslo jedine ak $p$ má dvoch delitelov, teda $1$ a $p$. Najmenšie prvočíslo
-je $2$.}.
+**7)** Vytvor program, ktorý zistí, či dáne číslo je prvočíslo\footnote{Číslo $p$ je prvočíslo jedine ak $p$ má práve dvoch delitelov: $1, p$. Inými slovami, neexistuje iný deliteľ z intervalu $(1,p) = [2,p-1]$. Najmenšie také číslo je $2$. Každé prvočíslo je taktiež nezáporné.}.
 
-```python
-je_prvocislo(2)  # True
-je_prvocislo(9)  # False
-je_prvocislo(17) # True
+```txt
+>>> 2 je prvocislo.
+>>> 9 nie je prvocislo.
+>>> 17 je prvocislo.
 ```
+
+Ak $a$ delí $b$, tak $\frac{a}{b}$ je celé číslo, teda delenie *nemá zvyšok*. Toto v programovaní možno zapísať ako `a % b == 0`, teda zvyšok po delení $a$ s $b$ je $0$. Operácia `_%_` sa nazýva *modulo*.
 
 **8)** Vypíš pre dané $0 \leq n \leq 10$ tabuľku s *malou násobilkou*. Napr. pre $n = 7$ máme:
 
 ```txt
+<<< n = 7
 >>> 7 x 1  = 7
 >>> 7 x 2  = 14
 >>> 7 x 4  = 21
@@ -170,7 +172,7 @@ je_prvocislo(17) # True
 >>> 7 x 10 = 70
 ```
 
-**9)** Vytvor program, ktorý náhodne vyberie číslicu $n$. Tento program sa pýta hráča na číslo pokiaľ neuhádne toto číslo $n$. Pre $n=2$ vyzerá hra takto
+**9)** Vytvor program, ktorý náhodne vyberie číslicu $n$. Tento program sa pýta hráča na číslicu pokiaľ neuhádne toto $n$. Pre $n=2$ vyzerá hra takto
 
 ```txt
 >>> Mam nahodne cislo (hra sa zacina)
@@ -198,4 +200,3 @@ r = random.randint(1,4)
 teda pridaj do kódu premennú `pocet_pokusov` (s ľubovoľnou hodnotou). 
 Program sa teda ukončí (i) akonáhle uhádneme náhodné číslo alebo (ii) vyčerpáme
 počet pokusov. Ak vyčerpáme pokusy, program vypíše: `Vycerpal si vsetky pokusy! Koniec.`
-
