@@ -167,7 +167,7 @@ Ak $a$ delí $b$, tak $\frac{a}{b}$ je celé číslo, teda delenie *nemá zvyšo
 <<< n = 7
 >>> 7 x 1  = 7
 >>> 7 x 2  = 14
->>> 7 x 4  = 21
+>>> 7 x 3  = 21
 >>> ...
 >>> 7 x 10 = 70
 ```
