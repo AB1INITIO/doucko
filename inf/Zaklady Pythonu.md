@@ -261,9 +261,9 @@ hodnotou. Funkciu vytvor sám, teda nepouži funkciu `max` zo štandardnej
 knižnice.
 
 ```python
-maximum(10,20)) # 20
-maximum(4,2))   # 4
-maximum(0,0))   # 0
+print(maximum(10,20)) # 20
+print(maximum(4,2))   # 4
+print(maximum(0,0))   # 0
 ```
 
 **2)** Vytvor funkciu `faktorial`, ktorá pre dané $n \geq 0$ **vypočíta**
@@ -271,12 +271,12 @@ faktoriál $n$, teda $\text{faktorial}(n) = n \cdot (n-1) \cdot \dots \cdot 2
 \cdot 1$. Napr. $\text{faktorial}(4) = 4 \cdot 3 \cdot 2 \cdot 1 = 24$.
 
 ```python
-faktorial(0)) # 1 (vynimka)
-faktorial(1)) # 1 = 1
-faktorial(2)) # 2 = 2*1
-faktorial(3)) # 6 = 3*2*1
+print(faktorial(0)) # 1 (vynimka)
+print(faktorial(1)) # 1 = 1
+print(faktorial(2)) # 2 = 2*1
+print(faktorial(3)) # 6 = 3*2*1
 # ...
-faktorial(6)) # 720 = 6*5*4*3*2*1
+print(faktorial(6)) # 720 = 6*5*4*3*2*1
 ```
 
 **3)** Uvažuj, že základné aritmetické operácie $+,-,*,\div$ sú definované cez funkcie
