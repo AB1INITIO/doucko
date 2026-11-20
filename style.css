@@ -103,7 +103,7 @@ a.back {
   top: 1.25rem;
   left: 1.5rem;
   font-family: var(--mono);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: var(--fg-muted);
   text-decoration: none;
 }
@@ -321,7 +321,7 @@ a.footnote-back {
 footer {
   padding: 1.5rem 1.5rem;
   font-family: var(--mono);
-  font-size: 0.78rem;
+  font-size: 0.85rem;
   color: var(--fg-muted);
   border-top: 1px solid var(--border);
   text-align: center;
