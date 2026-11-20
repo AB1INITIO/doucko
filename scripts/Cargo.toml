@@ -1,0 +1,6 @@
+[package]
+name = "abinitio"
+version = "0.1.0"
+edition = "2024"
+description = "Builds the ab initio site: Markdown with KaTeX math, rendered to HTML by pandoc"
+publish = false
