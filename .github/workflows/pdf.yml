@@ -1,0 +1,74 @@
+name: PDF
+
+# Renders each page to a PDF, published as an asset of the `pdf` release, which
+# the page's download button links to. A run renders only the pages changed, or
+# whose images changed, since the last run (which the `pdf` tag marks). To
+# render every page, e.g. after changing how PDFs are made, run it by hand:
+# Actions → PDF → Run workflow.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write # to publish the release and move its tag
+
+concurrency:
+  group: pdf
+  cancel-in-progress: false
+
+jobs:
+  pdf:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      ABINITIO: scripts/target/release/abinitio
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # all history and tags, to diff against the last run
+
+      - name: Find the pages to render
+        id: plan
+        run: |
+          cargo build --quiet --release --manifest-path scripts/Cargo.toml
+          # Diff against the last run; with no release yet, or when run by hand,
+          # against the empty tree, so that every page counts as changed.
+          empty=$(git hash-object -t tree /dev/null)
+          base=$empty
+          if [ "$GITHUB_EVENT_NAME" = push ] && gh release view pdf > /dev/null 2>&1; then
+            base=$(git rev-parse -q --verify 'refs/tags/pdf^{commit}' || echo "$empty")
+          fi
+          git diff -z --name-only "$base" HEAD > "$RUNNER_TEMP/changed"
+          echo "pages=$(xargs -0 -r "$ABINITIO" pdf --list < "$RUNNER_TEMP/changed" | wc -l)" >> "$GITHUB_OUTPUT"
+
+      - name: Install pandoc and LaTeX
+        if: steps.plan.outputs.pages > 0
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends pandoc lmodern texlive-latex-recommended \
+            texlive-latex-extra texlive-fonts-recommended texlive-science texlive-lang-czechslovak
+
+      - name: Render the PDFs
+        id: render
+        if: steps.plan.outputs.pages > 0
+        continue-on-error: true # publish the others; a failed page is retried once it's fixed
+        run: xargs -0 -r "$ABINITIO" pdf < "$RUNNER_TEMP/changed"
+
+      - name: Publish the PDFs
+        run: |
+          gh release view pdf > /dev/null 2>&1 || gh release create pdf --title PDF --target "$GITHUB_SHA" \
+            --notes "Every page of https://ab1initio.github.io/doucko/ as a PDF, kept up to date by the PDF workflow."
+          if ls _pdf/*.pdf > /dev/null 2>&1; then gh release upload pdf _pdf/*.pdf --clobber; fi
+          # Remove the PDFs of deleted or renamed pages.
+          gh release view pdf --json assets --jq '.assets[].name' | sort > "$RUNNER_TEMP/published"
+          "$ABINITIO" pdf --list | sort | comm -23 "$RUNNER_TEMP/published" - | xargs -r -n1 gh release delete-asset pdf --yes
+          git tag -f pdf HEAD
+          git push -f origin refs/tags/pdf
+
+      - name: Fail if a page failed
+        if: steps.render.outcome == 'failure'
+        run: echo "::error::Some pages failed to render, see the step 'Render the PDFs'." && exit 1

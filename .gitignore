@@ -1,6 +1,9 @@
 # Generated site output
 _site/
 
+# PDFs: CI renders them into _pdf/ and publishes them as release assets
+*.pdf
+
 # Rust build output
 scripts/target/
 

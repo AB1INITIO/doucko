@@ -16,7 +16,12 @@
   </script>
 </head>
 <body>
-  <button class="theme-toggle" aria-label="Toggle dark mode"></button>
+  <div class="corner">
+$if(pdf-url)$
+    <a class="download" href="$pdf-url$" title="Stiahnuť ako PDF" aria-label="Stiahnuť ako PDF">↓ pdf</a>
+$endif$
+    <button class="theme-toggle" aria-label="Toggle dark mode"></button>
+  </div>
   <a class="back" href="./">../</a>
 
   <article>
