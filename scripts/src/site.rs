@@ -3,7 +3,8 @@
 //! The sources are a few top-level files (templates, landing page, stylesheet)
 //! and *sections*: the visible top-level directories other than tooling and
 //! output. A section's Markdown pages are rendered by pandoc, its other files
-//! are copied as they are, and an index page lists its pages.
+//! are copied as they are, and an index page lists its pages. Each page links
+//! to its PDF, which [`Site::pdf`] renders for the PDF workflow to publish.
 //!
 //! Each output depends on one source, except a section's index (on the list of
 //! its pages) and every page (on the page template), so [`Site::update`] can
@@ -22,6 +23,11 @@ use crate::preprocess::preprocess;
 
 /// The output directory.
 pub const OUT: &str = "_site";
+/// The output directory of [`Site::pdf`].
+const PDF_OUT: &str = "_pdf";
+/// Where each page links to its PDF: the `pdf` release, kept up to date by the
+/// PDF workflow (`.github/workflows/pdf.yml`).
+const PDF_URL: &str = "https://github.com/AB1INITIO/doucko/releases/download/pdf";
 /// pandoc's template for every page.
 const PAGE_TEMPLATE: &str = "pandoc-template.html";
 /// A section's index page, with `{{SECTION}}` and `{{ITEMS}}` to fill in.
@@ -29,16 +35,9 @@ const INDEX_TEMPLATE: &str = "index-template.html";
 /// Top-level files copied into the site as they are.
 const STATIC: [&str; 2] = ["index.html", "style.css"];
 /// Top-level directories that aren't sections.
-const NOT_SECTIONS: [&str; 3] = [OUT, "scripts", "templates"];
-/// pandoc's options for every page.
-const PANDOC_ARGS: [&str; 6] = [
-    "--template",
-    PAGE_TEMPLATE,
-    "--standalone",
-    "--from=markdown+tex_math_dollars",
-    "--to=html5",
-    "--katex",
-];
+const NOT_SECTIONS: [&str; 4] = [OUT, PDF_OUT, "scripts", "templates"];
+/// pandoc's options for every page, as HTML or as PDF.
+const PANDOC_ARGS: [&str; 2] = ["--standalone", "--from=markdown+tex_math_dollars"];
 
 /// The site's builder, set up for the installed pandoc.
 pub struct Site {
@@ -155,37 +154,109 @@ impl Site {
         run.finish()
     }
 
-    /// Renders the page `SECTION/NAME.md` into `OUT/SECTION/NAME.html`.
+    /// Renders into `PDF_OUT` the PDFs of the pages that `paths` affect, as
+    /// [`affected`] finds them.
+    pub fn pdf(&self, paths: &[impl AsRef<Path>]) -> io::Result<()> {
+        let mut run = Run::default();
+        for md in affected(paths)? {
+            let pdf = Path::new(PDF_OUT).join(pdf_name(&md));
+            log("pdf", arrow(&md, &pdf));
+            run.check(&md, self.pandoc(&md, &pdf, &["--pdf-engine=pdflatex"]));
+        }
+        run.finish()
+    }
+
+    /// Renders the page `SECTION/NAME.md` into `OUT/SECTION/NAME.html`, which
+    /// links to its PDF.
     fn render(&self, md: &Path) -> io::Result<()> {
         let html = page_output(md);
         log("pandoc", arrow(md, &html));
-        let markdown = preprocess(&fs::read_to_string(md)?);
-        let resources = md.parent().unwrap_or(Path::new("."));
-        write_atomic(&html, |tmp| self.pandoc(&markdown, resources, tmp))
+        let pdf = format!("pdf-url={PDF_URL}/{}", pdf_name(md));
+        let args = [
+            "--template",
+            PAGE_TEMPLATE,
+            "--to=html5",
+            "--katex",
+            "--variable",
+            &pdf,
+        ];
+        self.pandoc(md, &html, &args)
     }
 
-    fn pandoc(&self, markdown: &str, resources: &Path, output: &Path) -> io::Result<()> {
-        let mut child = Command::new("pandoc")
-            .args(PANDOC_ARGS)
-            .arg(self.highlight)
-            .arg("--resource-path")
-            .arg(resources)
-            .arg("--output")
-            .arg(output)
-            .stdin(Stdio::piped())
-            .spawn()?;
-        // On failure, pandoc's exit status explains more than the broken pipe.
-        let written = child
-            .stdin
-            .take()
-            .expect("stdin is piped")
-            .write_all(markdown.as_bytes());
-        let status = child.wait()?;
-        if !status.success() {
-            return Err(io::Error::other(format!("pandoc failed ({status})")));
-        }
-        written
+    /// Renders the page `md` into `out` with pandoc, given options for the format.
+    fn pandoc(&self, md: &Path, out: &Path, args: &[&str]) -> io::Result<()> {
+        let markdown = preprocess(&fs::read_to_string(md)?);
+        write_atomic(out, |tmp| {
+            let mut child = Command::new("pandoc")
+                .args(PANDOC_ARGS)
+                .args(args)
+                .arg(self.highlight)
+                .arg("--resource-path")
+                .arg(md.parent().unwrap_or(Path::new(".")))
+                .arg("--output")
+                .arg(tmp)
+                .stdin(Stdio::piped())
+                .spawn()?;
+            // On failure, pandoc's exit status explains more than the broken pipe.
+            let stdin = child.stdin.take();
+            let written = stdin
+                .expect("stdin is piped")
+                .write_all(markdown.as_bytes());
+            let status = child.wait()?;
+            if !status.success() {
+                return Err(io::Error::other(format!("pandoc failed ({status})")));
+            }
+            written
+        })
     }
+}
+
+/// The pages whose PDF depends on any of `paths`, which changed: the page
+/// itself, or a file it embeds, such as an image (found by its path in the
+/// page); every page if `paths` is empty.
+pub fn affected(paths: &[impl AsRef<Path>]) -> io::Result<Vec<PathBuf>> {
+    let mut pages = Vec::new();
+    for section in sections()? {
+        for path in entries(Path::new(&section))? {
+            let page = matches!(classify(&path), Source::Page(_));
+            if page && (paths.is_empty() || depends(&path, paths)?) {
+                pages.push(path);
+            }
+        }
+    }
+    Ok(pages)
+}
+
+fn depends(page: &Path, paths: &[impl AsRef<Path>]) -> io::Result<bool> {
+    if paths.iter().any(|path| path.as_ref() == page) {
+        return Ok(true);
+    }
+    let dir = page.parent().expect("pages are in sections");
+    let embeds: Vec<_> = paths
+        .iter()
+        .filter_map(|path| path.as_ref().strip_prefix(dir).ok()?.to_str())
+        .filter(|path| !path.is_empty())
+        .collect();
+    if embeds.is_empty() {
+        return Ok(false);
+    }
+    let text = fs::read_to_string(page)?;
+    Ok(embeds.iter().any(|path| text.contains(path)))
+}
+
+/// The file name of the page's PDF, `SECTION-NAME.pdf`, with every run of
+/// characters other than ASCII letters, digits, `.` and `_` made a single `-`:
+/// GitHub would rename such a release asset, breaking its link.
+pub fn pdf_name(md: &Path) -> String {
+    let mut name = String::new();
+    for c in md.with_extension("").to_string_lossy().chars() {
+        if c.is_ascii_alphanumeric() || c == '.' || c == '_' {
+            name.push(c);
+        } else if !name.ends_with('-') {
+            name.push('-');
+        }
+    }
+    format!("{}.pdf", name.trim_matches('-'))
 }
 
 /// Every file the site is built from, for the watcher to track.
@@ -374,9 +445,8 @@ fn remove_all(path: &Path) -> io::Result<()> {
 fn write_atomic(dst: &Path, write: impl FnOnce(&Path) -> io::Result<()>) -> io::Result<()> {
     let dir = dst.parent().expect("outputs are in OUT");
     fs::create_dir_all(dir)?;
-    let mut name = OsString::from(".");
+    let mut name = OsString::from(".tmp."); // keeps the extension, which tells pandoc the format
     name.push(dst.file_name().expect("outputs are files"));
-    name.push(".tmp");
     let tmp = dir.join(name);
     let result = write(&tmp).and_then(|()| fs::rename(&tmp, dst));
     if result.is_err() {
@@ -439,6 +509,22 @@ mod tests {
     use super::{Source::*, *};
 
     #[test]
+    fn names_pdfs() {
+        let cases = [
+            ("mat/Kruh a Kruznica.md", "mat-Kruh-a-Kruznica.pdf"),
+            (
+                "inf/Zaklady Pythonu - Doplnkove Cvicenia.md",
+                "inf-Zaklady-Pythonu-Doplnkove-Cvicenia.pdf",
+            ),
+            ("inf/2D List.md", "inf-2D-List.pdf"),
+            ("mat/a_b (c).md", "mat-a_b-c.pdf"),
+        ];
+        for (md, pdf) in cases {
+            assert_eq!(pdf_name(Path::new(md)), pdf);
+        }
+    }
+
+    #[test]
     fn classifies_sources() {
         let cases = [
             ("pandoc-template.html", PageTemplate),
@@ -469,6 +555,7 @@ mod tests {
             ("Makefile", Other),
             ("scripts/src/main.rs", Other),
             ("_site/mat/IB.html", Other),
+            ("_pdf/mat-IB.pdf", Other),
             (".git/HEAD", Other),
         ];
         for (path, source) in cases {

@@ -3,7 +3,7 @@
 ABINITIO := cargo run --quiet --release --manifest-path scripts/Cargo.toml --
 PORT ?= 8000
 
-.PHONY: build watch serve test clean
+.PHONY: build watch serve pdf test clean
 
 # Build the site into _site/ from scratch.
 build:
@@ -17,10 +17,14 @@ watch:
 serve:
 	@$(ABINITIO) serve $(PORT)
 
+# Render every page's PDF into _pdf/, as CI publishes them (needs LaTeX).
+pdf:
+	@$(ABINITIO) pdf
+
 # Test the build tool.
 test:
 	@cargo test --quiet --manifest-path scripts/Cargo.toml
 
 clean:
-	@rm -rf _site
+	@rm -rf _site _pdf
 	@echo "Cleaned."

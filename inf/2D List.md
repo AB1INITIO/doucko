@@ -120,7 +120,7 @@ O O O
 
 ## Piškvorky — výhra
 
-Rozšír program z predošlej úlohy o funkciu `skontroluj_vyhrу(piskvorky, hrac)`, ktorá skontroluje, či daný hráč (`'X'` alebo `'O'`) vyhral. Hráč vyhrá, ak má obsadený celý riadok, celý stĺpec alebo jednu z dvoch uhlopriečok\footnote{Tip: Skontroluj zvlášť všetky riadky, potom všetky stĺpce, potom obe uhlopriečky.}.
+Rozšír program z predošlej úlohy o funkciu `skontroluj_vyhry(piskvorky, hrac)`, ktorá skontroluje, či daný hráč (`'X'` alebo `'O'`) vyhral. Hráč vyhrá, ak má obsadený celý riadok, celý stĺpec alebo jednu z dvoch uhlopriečok\footnote{Tip: Skontroluj zvlášť všetky riadky, potom všetky stĺpce, potom obe uhlopriečky.}.
 
 Otestuj funkciu na týchto prípadoch:
 

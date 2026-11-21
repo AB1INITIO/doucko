@@ -18,12 +18,15 @@ const USAGE: &str = "\
 Usage: abinitio <COMMAND>
 
 Commands:
-  build          Build the site into _site/ from scratch
-  watch          Build, then rebuild whatever changes as you edit
-  serve [ADDR]   Watch, and serve the site at ADDR: a port on localhost,
-                 or HOST:PORT [default: 8000]
+  build                 Build the site into _site/ from scratch
+  watch                 Build, then rebuild whatever changes as you edit
+  serve [ADDR]          Watch, and serve the site at ADDR: a port on
+                        localhost, or HOST:PORT [default: 8000]
+  pdf [PATH...]         Render into _pdf/ the PDFs of the pages that PATHs
+                        affect (pages, or files they embed), or of all pages
+  pdf --list [PATH...]  Print the names of those PDFs instead
 
-Run it from the site's root directory. It needs pandoc.";
+Run it from the site's root directory. It needs pandoc, and LaTeX for PDFs.";
 
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();
@@ -33,6 +36,12 @@ fn main() -> ExitCode {
         ["watch"] => develop(None),
         ["serve"] => develop(Some("8000")),
         ["serve", addr] => develop(Some(addr)),
+        ["pdf", "--list", ref paths @ ..] => site::affected(paths).map(|pages| {
+            for page in pages {
+                println!("{}", site::pdf_name(&page));
+            }
+        }),
+        ["pdf", ref paths @ ..] => Site::new().and_then(|site| site.pdf(paths)),
         ["help" | "-h" | "--help"] => {
             println!("{USAGE}");
             return ExitCode::SUCCESS;

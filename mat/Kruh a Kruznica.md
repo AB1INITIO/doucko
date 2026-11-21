@@ -106,7 +106,7 @@ Kruhový výsek má obsah $S_v = 16\pi\,\text{cm}^2$ a polomer $r = 8\,\text{cm}
 
 ![](img/kruh_odsek.png)
 
-Obsah kruhového odseku (oblasť medzi tetivou\footnote{Ak priamka, ktorá precházda cez 2 body na kružnici je sečnica, tak úsečka tvorená týmito dvoma bodmi sa nazýva práve \texit{tetiva}.} a oblúkom) so stredovým
+Obsah kruhového odseku (oblasť medzi tetivou\footnote{Ak priamka, ktorá precházda cez 2 body na kružnici je sečnica, tak úsečka tvorená týmito dvoma bodmi sa nazýva práve \textit{tetiva}.} a oblúkom) so stredovým
 uhlom $\alpha$ je $S_o = S_v - S_\triangle$.
 
 **9)**
