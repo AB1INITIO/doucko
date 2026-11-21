@@ -8,7 +8,7 @@ header-includes: |
     \usepackage{gensymb}
     \usepackage{textcomp}
     \pagestyle{fancy}
-    \fancyhead[CO,CE]{Príklady Doučovanie Python}
+    \fancyhead[CO,CE]{Python}
     \fancyfoot[CO,CE]{Materiály Doučovanie - Michal Spano, © 2026}
     \fancyfoot[LE,RO]{\thepage}
 papersize: a4
@@ -18,7 +18,9 @@ geometry: margin=2cm
 output: pdf_document
 ---
 
-## Tabuľka čísel
+# Práca s konzolou
+
+**1)** Tabuľka čísel
 
 Máš nasledujúci 2D zoznam:
 
@@ -36,7 +38,7 @@ Bez spustenia programu odpovedz na otázky a potom si odpovede over:
 
 > **Otázka**: Prečo sa na prístup k jednému prvku používajú *dve* hranatné zátvorky? Čo predstavuje každá z nich?
 
-## Úprava tabuľky
+**2)** Úprava tabuľky
 
 Vychádzaj z rovnakej tabuľky `zz` ako v predošlej úlohe. Vykonaj nasledujúce operácie **v tomto poradí** a po každej z nich vypíš celý zoznam `zz`:
 
@@ -48,7 +50,7 @@ Vychádzaj z rovnakej tabuľky `zz` ako v predošlej úlohe. Vykonaj nasledujúc
 
 > **Tip**: Využi metódy `append`, `reverse`, `insert` a `pop`.
 
-## Súčet riadkov
+**3)** Súčet riadkov
 
 Vytvor funkciu `sucty_riadkov(tabulka)`, ktorá pre každý riadok 2D zoznamu vypíše jeho súčet. Otestuj ju na tabuľke:
 
@@ -68,7 +70,7 @@ Riadok 3: 24
 
 > **Tip**: Použi *vnorené slučky* — vonkajšia prechádza riadky, vnútorná prvky v riadku.
 
-## Hľadanie hodnoty
+**4)** Hľadanie hodnoty
 
 Vytvor funkciu `najdi(tabulka, hodnota)`, ktorá nájde zadanú `hodnota` v 2D zozname a vypíše, v ktorom riadku a stĺpci sa nachádza (indexy začínajú od $1$). Ak sa hodnota nenachádza, vypíše `"Nenašlo sa."`.
 
@@ -82,7 +84,7 @@ Hodnota 5 je na riadku 2, stĺpci 2.
 
 > **Otázka**: Čo sa stane, ak sa rovnaká hodnota nachádza na viacerých miestach? Ako by si upravil funkciu, aby vypísala *všetky* výskyty?
 
-## Náhodná tabuľka
+**5)** Náhodná tabuľka
 
 Vytvor 2D zoznam o rozmere $5 \times 5$ obsahujúci náhodné celé čísla od $1$ po $50$. Tabuľku vypíš prehľadne — každý riadok na samostatný riadok, čísla oddelené medzerou\footnote{Tip: Použi `random.randint(a, b)` a dve vnorené slučky — jednu pre riadky, druhú pre stĺpce.}.
 
@@ -96,7 +98,7 @@ Očakávaný výstup (čísla sa líšia):
 
 > **Tip**: Na zarovnanie čísel použi formátovanie reťazca, napr. `f"{cislo:3}"`.
 
-## Piškvorky — výpis
+**6)** Piškvorky — výpis
 
 Máš nasledujúci 2D zoznam predstavujúci hraciu plochu piškvoriek:
 
@@ -118,7 +120,7 @@ O O O
 
 > **Otázka**: Prečo je výhodnejšie uložiť hraciu plochu do 2D zoznamu namiesto deviatich samostatných premenných?
 
-## Piškvorky — výhra
+**7)** Piškvorky — výhra
 
 Rozšír program z predošlej úlohy o funkciu `skontroluj_vyhry(piskvorky, hrac)`, ktorá skontroluje, či daný hráč (`'X'` alebo `'O'`) vyhral. Hráč vyhrá, ak má obsadený celý riadok, celý stĺpec alebo jednu z dvoch uhlopriečok\footnote{Tip: Skontroluj zvlášť všetky riadky, potom všetky stĺpce, potom obe uhlopriečky.}.
 
@@ -134,7 +136,7 @@ p2 = [['X', 'O', ' '],
       ['X', ' ', 'O']]  # X vyhral (stĺpec)
 ```
 
-## Transpozícia tabuľky
+**8)** Transpozícia tabuľky
 
 Vytvor funkciu `transponuj(tabulka)`, ktorá vráti *transponovanú* tabuľku — riadky a stĺpce sa navzájom vymenia. Funkcia nesmie modifikovať pôvodný zoznam.
 
@@ -155,7 +157,7 @@ Očakávaný výsledok:
 
 > **Otázka**: Aké rozmery má transponovaná tabuľka, ak má pôvodná $m$ riadkov a $n$ stĺpcov?
 
-## Maximá riadkov
+**9)** Maximá riadkov
 
 Vytvor funkciu `maxima_riadkov(tabulka)`, ktorá vráti nový *jednorozmerný* zoznam obsahujúci maximálnu hodnotu z každého riadku tabuľky. Použi funkciu `max()`.
 
@@ -172,7 +174,7 @@ Tabuľka:
 Maximá: [45, 33, 55]
 ```
 
-## Pasca na míny
+**10)** Pasca na míny
 
 Vytvor jednoduchú *hru na míny*. Hraciu plochu $4 \times 4$ reprezentuj ako 2D zoznam, kde `'M'` označuje mínu a `'.'` prázdne pole. Míny rozmiestnene náhodne (celkovo $4$ míny).
 
@@ -183,11 +185,11 @@ Vytvor funkciu `vypis_plochu(plocha)` a funkciu `odkry_pole(plocha, riadok, stlp
 
 > **Tip**: Náhodné rozmiestnenie mín môžeš riešiť tak, že vygeneruješ náhodné indexy `(riadok, stlpec)` a skontroluješ, či tam mínu ešte nemáš.
 
-# Grafické príklady
+# Grafika: pomôž si s Tkinter-om
 
 Tu sa trochu pohráme s Tkinter-om, ktorý nám pomôže s vizualizáciou.
 
-## Vizualizácia tabuľky
+**1)** Vizualizácia tabuľky
 
 Vytvor program, ktorý zobrazí ľubovoľný 2D zoznam čísel ako mriežku v Tkinter-i. Každé pole nakresli ako štvorec `60x60` px a doprostred neho vypíš hodnotu. Otestuj na tabuľke:
 
@@ -199,19 +201,19 @@ tabulka = [[1,  2,  3,  4],
 
 > **Tip**: Na vykreslenie štvorca použi `create_rectangle`, na text `create_text`. Súradnice bunky na pozícii `(r, s)` sú `x = s * 60`, `y = r * 60`.
 
-## Tepelná mapa
+**2)** Tepelná mapa
 
 Vytvor program, ktorý zobrazí 2D zoznam $8 \times 8$ náhodných čísel od $0$ po $100$ ako *tepelnú mapu*. Každé pole zafarbí odtieňom od modrej (malé hodnoty) po červenú (veľké hodnoty)\footnote{Tip: Pre hodnotu $v$ v rozsahu $0$–$100$ vypočítaj červenú zložku ako $\lfloor 2.55 \cdot v \rfloor$ a modrú ako $\lfloor 2.55 \cdot (100 - v) \rfloor$. Farbu zostav ako hex reťazec: \texttt{f"\#{r:02x}00\{b:02x\}".}}. Rozmer každého poľa je `50x50` px.
 
 > **Otázka**: Čo by sa zmenilo, keby si použil rozsah čísel $0$–$1000$ namiesto $0$–$100$? Ako by si upravil výpočet farby?
 
-## Násobilka
+**3)** Násobilka
 
 Vytvor program, ktorý zobrazí násobilku $10 \times 10$ ako farebnú mriežku v Tkinter-i. Hodnotu každej bunky vypočítaj ako súčin jej riadkového a stĺpcového indexu (začínaj od $1$). Bunky so súčinom väčším ako $50$ zafarbí na `"salmon"`, ostatné na `"lightyellow"`. Doprostred každej bunky vypíš výsledok.
 
 > **Otázka**: Ktoré bunky budú červené? Vieš to určiť ešte pred spustením programu?
 
-## Stĺpcový diagram
+**4)** Stĺpcový diagram
 
 Máš 2D zoznam, kde každý vnútorný zoznam predstavuje výsledky jedného žiaka v $5$ predmetoch:
 
